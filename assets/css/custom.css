@@ -1,0 +1,106 @@
+/*
+ * Custom CSS for PPDB Online
+ */
+
+/* 1. Variables & Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #0d6efd; /* Bootstrap Blue */
+    --primary-hover: #0b5ed7;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --light-bg: #f8f9fa;
+    --dark-text: #212529;
+    --light-text: #ffffff;
+    --border-color: #dee2e6;
+    --card-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    --card-hover-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* 2. General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+}
+
+/* 3. Components */
+.navbar {
+    box-shadow: var(--card-shadow);
+}
+
+.navbar-brand {
+    font-weight: 600;
+}
+
+.hero-section {
+    border-radius: 0.75rem;
+    overflow: hidden; /* Ensures pseudo-element respects border-radius */
+}
+
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    border-bottom: none;
+    font-weight: 600;
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+}
+
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Alur Pendaftaran Section on Index */
+.alur-item {
+    text-align: center;
+}
+.alur-item .icon {
+    width: 80px;
+    height: 80px;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
