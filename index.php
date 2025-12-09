@@ -114,7 +114,7 @@ ini_set('display_errors', 0);
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">Kartu Indonesia Pintar (KIP)</li>
                         <li class="list-group-item">Surat Keterangan Lulus</li>
-                        <li class="list-group-item">Akta Kelahiran & Kartu Keluarga</li>
+                        <li class="list-group-item">Akta Kelahiran (AK)& Kartu Keluarga (KK)</li>
                     </ul>
                 </div>
             </div>
