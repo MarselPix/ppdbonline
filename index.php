@@ -10,7 +10,7 @@ ini_set('display_errors', 0);
     <div class="hero-overlay"></div>
     <div class="hero-content text-center text-white">
         <h1 class="display-4 fw-bold">Selamat Datang di PPDB Online</h1>
-        <p class="lead fs-4">SMP Negeri 1 Bawang - Tahun Ajaran 2024/2025</p>
+        <p class="lead fs-4">SMP Negeri 2 Bawang - Tahun Ajaran 2024/2025</p>
         <hr class="my-4 border-white">
         <p class="fs-5">Pendaftaran siswa baru telah dibuka. Segera daftarkan diri Anda!</p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
