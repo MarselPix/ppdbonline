@@ -1,0 +1,137 @@
+**Narasi Desain Sistem PPDB Online SMPN 1 Bawang**
+
+**1. Database: `ppdbonline`**
+
+Tabel-tabel yang diperlukan:
+
+*   **`calon_siswa`**: Menyimpan data pendaftar.
+    *   `id` (Primary Key, Auto Increment)
+    *   `no_pendaftaran` (Unique, Format: PPDB[TAHUN][5-digit angka], e.g., PPDB202400001)
+    *   `jalur_pendaftaran` (ENUM: 'PRESTASI_AKADEMIK', 'PRESTASI_NON_AKADEMIK', 'AFIRMASI')
+    *   `password` (Hash dari password yang dibuat user saat daftar)
+    *   `nama_lengkap`
+    *   `jenis_kelamin`
+    *   `tempat_lahir`
+    *   `tanggal_lahir`
+    *   `alamat`
+    *   `asal_sekolah`
+    *   `nama_ortu`
+    *   `no_hp_ortu`
+    *   `email_ortu`
+    *   `rata_rata_nilai_rapot` (DECIMAL, untuk jalur prestasi akademik)
+    *   `berkas_prestasi` (VARCHAR, nama file upload sertifikat/piagam untuk jalur non-akademik)
+    *   `no_kip` (VARCHAR, untuk jalur afirmasi. Bisa NULL)
+    *   `berkas_kip` (VARCHAR, nama file upload foto KIP untuk jalur afirmasi)
+    *   `status` (ENUM: 'PENGAJUAN', 'DITERIMA', 'DITOLAK'. Default: 'PENGAJUAN')
+    *   `ranking` (INT, diisi oleh sistem setelah proses perangkingan)
+    *   `created_at` (Timestamp)
+
+*   **`admin`**: Untuk login administrator.
+    *   `id`
+    *   `username`
+    *   `password` (Hash)
+
+*   **`pengumuman`** atau `pengaturan`: Untuk menyimpan pengaturan umum seperti tanggal buka/tutup pendaftaran, kuota per jalur, dll.
+    *   `id`
+    *   `tahun_akademik`
+    *   `pendaftaran_buka`
+    *   `pendaftaran_tutup`
+    *   `pengumuman_tanggal`
+
+---
+
+**2. Halaman Frontend (Untuk Calon Siswa/Pendaftar)**
+
+*   **Halaman Utama (Landing Page):**
+    *   Menampilkan informasi umum PPDB: logo sekolah, jadwal penting (pendaftaran buka, tutup, pengumuman), alur pendaftaran, dan syarat-syarat untuk setiap jalur (Prestasi Akademik, Non-Akademik, Afirmasi).
+    *   Terdapat dua tombol besar: **"Daftar Sekarang"** dan **"Cek Pengumuman"**.
+
+*   **Halaman Login Pendaftar:**
+    *   Form login dengan input `no_pendaftaran` dan `password`.
+
+*   **Halaman Registrasi/Akun Baru:**
+    *   Calon siswa mengisi data dasar untuk membuat akun: `nama_lengkap`, `email_ortu`, `no_hp_ortu`, dan `password`.
+    *   Sistem akan secara otomatis generate `no_pendaftaran` yang unik.
+    *   Setelah submit, user dialihkan ke halaman login dan dapat melanjutkan mengisi formulir.
+
+*   **Halaman Dashboard Pendaftar (Setelah Login):**
+    *   Menampilkan status pendaftaran (`Menunggu Verifikasi`, `Diterima`, `Ditolak`).
+    *   Menampilkan `no_pendaftaran` dengan jelas.
+    *   Terdapat menu untuk: **"Lengkapi Formulir"**, **"Unggah Berkas"**, **"Logout"**.
+
+*   **Halaman Formulir Data Diri:**
+    *   Form untuk melengkapi semua data pribadi, data orang tua, dan data asal sekolah.
+    *   Pemilihan **Jalur Pendaftaran** (Radio Button: Prestasi Akademik, Prestasi Non-Akademik, Afirmasi).
+    *   Bergantung pada jalur yang dipilih, form tambahan akan muncul:
+        *   **Prestasi Akademik:** Input `Rata-Rata Nilai Rapot` (5 semester).
+        *   **Prestasi Non-Akademik:** Input `Nama Lomba`, `Tingkat Lomba`, `Peringkat`, dan `Unggah Sertifikat`.
+        *   **Afirmasi:** Input `Nomor KIP` dan `Unggah Foto KIP`.
+    *   Tombol **"Simpan dan Ajukan"**. Setelah di-klik, `status` berubah menjadi `PENGAJUAN` dan data tidak bisa diubah lagi.
+
+---
+
+**3. Halaman Backend/Admin (Untuk Panitia PPDB)**
+
+*   **Halaman Login Admin:** Form login dengan username dan password.
+
+*   **Dashboard Admin:**
+    *   Statistik cepat: Total Pendaftar, Diterima, Ditolak, Menunggu.
+    *   Grafik batang menunjukkan jumlah pendaftar per jalur.
+
+*   **Menu Manajemen Pendaftar:**
+    *   Tabel yang menampilkan semua data pendaftar (`no_pendaftaran`, `nama`, `jalur`, `status`).
+    *   Fitur Filter: berdasarkan jalur dan status.
+    *   Fitur Pencarian: berdasarkan nama atau no pendaftaran.
+    *   Aksi untuk setiap data: **"Lihat Detail"**, **"Terima"**, **"Tolak"**.
+    *   **Halaman Detail Pendaftar:** Menampilkan semua data dan berkas yang diupload oleh calon siswa. Admin bisa memverifikasi kelengkapannya di sini sebelum memutuskan.
+
+*   **Menu Proses Perangkingan:**
+    *   Halaman ini memiliki tombol **"Hitung Ranking"**.
+    *   **Alur Logika Perangkingan:**
+        1.  Sistem hanya memproses data dengan status `PENGAJUAN`.
+        2.  **Jalur Prestasi Akademik:** Di-ranking berdasarkan `rata_rata_nilai_rapot` (dari tertinggi ke terendah).
+        3.  **Jalur Prestasi Non-Akademik:** Di-ranking berdasarkan skor prestasi (contoh: Juara 1 Nasional = 100 poin, Juara 1 Provinsi = 90 poin, dst. - rulesnya bisa diatur admin). Nilai tertinggi ke terendah.
+        4.  **Jalur Afirmasi:** Di-ranking berdasarkan `rata_rata_nilai_rapot` juga atau berdasarkan tingkat ekonomi (jika datanya ada).
+        5.  Sistem akan mengupdate kolom `ranking` setiap calon siswa sesuai dengan jalurnya masing-masing.
+    *   Setelah perangkingan, admin bisa melihat daftar ranking per jalur.
+
+*   **Menu Penentuan Kelulusan:**
+    *   Admin memasukkan **kuota** untuk setiap jalur (e.g., Prestasi Akademik: 50 kursi, Non-Akademik: 20, Afirmasi: 30).
+    *   Tombol **"Proses Seleksi Akhir"**.
+    *   **Alur Logika:**
+        1.  Sistem akan mengubah status calon siswa di setiap jalur yang rankingnya **TERSEDIA DALAM KUOTA** menjadi `DITERIMA`.
+        2.  Sistem akan mengubah status calon siswa yang rankingnya **DI ATAS KUOTA** menjadi `DITOLAK`.
+        3.  Admin bisa melakukan proses ini secara terpisah per jalur.
+
+*   **Menu Pengaturan:**
+    *   Mengatur tanggal buka/tutup pendaftaran.
+    *   Mengatur tanggal pengumuman.
+    *   Mengatur bobot nilai prestasi (jika diperlukan).
+
+---
+
+**4. Halaman Pengumuman (Akses Publik)**
+
+*   **Halaman Khusus:** Biasanya satu halaman sederhana yang bisa diakses dari menu utama.
+*   Hanya berisi:
+    *   Judul besar "PENGUMUMAN PPDB SMPN 1 Bawang Tahun Ajaran ..."
+    *   Form input dengan placeholder "Masukkan Nomor Pendaftaran Anda" (e.g., PPDB202400001) dan tombol "Cari".
+*   **Hasil Pencarian:**
+    *   Jika `nomor_pendaftaran` ditemukan dan statusnya `DITERIMA`: Tampilkan pesan **"SELAMAT! Anda DITERIMA di SMP Negeri 1 Bawang."** disertai nama dan ranking.
+    *   Jika `nomor_pendaftaran` ditemukan dan statusnya `DITOLAK`: Tampilkan pesan **"Maaf, Anda belum berhasil pada seleksi kali ini."** dengan kalimat yang sopan.
+    *   Jika `nomor_pendaftaran` tidak ditemukan atau status masih `PENGAJUAN`: Tampilkan pesan **"Nomor Pendaftaran tidak ditemukan atau hasil seleksi belum tersedia."**.
+    *   Jika tanggal pengumuman belum tiba, form bisa disembunyikan dan diganti dengan hitungan mundur (countdown timer).
+
+---
+
+**Alur Keseluruhan Sistem:**
+
+1.  Calon Siswa Buat Akun -> Dapat No. Pendaftaran.
+2.  Calon Siswa Login -> Lengkapi Form & Pilih Jalur -> Upload Berkas -> Ajukan.
+3.  Data masuk ke admin dengan status `PENGAJUAN`.
+4.  Admin memverifikasi berkas dan data (bisa tolak jika ada yang salah dengan mengubah status jadi `DITOLAK` dan memberi alasan via email/notifikasi).
+5.  Admin menjalankan fitur **Perangkingan**.
+6.  Admin mengatur **Kuota** per jalur dan menjalankan **Seleksi Akhir**.
+7.  Sistem otomatis mengubah status menjadi `DITERIMA` atau `DITOLAK` berdasarkan ranking dan kuota.
+8.  Pada tanggal pengumuman, calon siswa bisa mengecek hasilnya di halaman publik dengan memasukkan `no_pendaftaran`.
+

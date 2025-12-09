@@ -1,0 +1,88 @@
+/*
+ * Custom CSS for PPDB Online - Admin Panel
+ */
+
+:root {
+    --primary-color: #0d6efd;
+    --light-bg: #f8f9fa;
+    --sidebar-bg: #ffffff;
+    --sidebar-link-color: #495057;
+    --sidebar-link-hover-bg: #e9ecef;
+    --sidebar-link-active-color: #ffffff;
+    --sidebar-link-active-bg: var(--primary-color);
+    --border-color: #dee2e6;
+    --card-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+body {
+    background-color: var(--light-bg);
+}
+
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    color: var(--dark-text);
+    border-right: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+.sidebar .nav-link {
+    color: var(--sidebar-link-color);
+    font-weight: 500;
+    margin-bottom: 4px;
+    border-radius: 0.5rem;
+}
+
+.sidebar .nav-link:hover {
+    background-color: var(--sidebar-link-hover-bg);
+    color: var(--primary-color);
+}
+
+.sidebar .nav-link.active {
+    color: var(--sidebar-link-active-color);
+    background-color: var(--sidebar-link-active-bg);
+}
+
+.sidebar .nav-link .bi {
+    margin-right: 10px;
+}
+
+.content {
+    flex: 1;
+    padding: 30px;
+}
+
+/* Override default card header from frontend */
+.card-header {
+    background-color: #fff !important;
+    color: var(--dark-text) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    font-weight: 600;
+}
+
+/* Dashboard cards */
+.dashboard-card .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-card .card-icon {
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+/* Table styles */
+.table {
+    border-color: var(--border-color);
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    border-bottom-width: 1px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+}
